@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お申し込みありがとうございます | AIプロンプト作成代行サービス</title>
+
+  <!-- スタイルシート読み込み -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="thanks-page">
+
+  <!-- ========================================
+       ヘッダー
+       ======================================== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="header-logo">✦ AIプロンプト制作</span>
+      <span class="header-badge">Professional Prompt Service</span>
+    </div>
+  </header>
+
+  <!-- ========================================
+       サンクスページ メインコンテンツ
+       ======================================== -->
+  <main class="thanks-hero">
+
+    <!-- ローディング中の表示 -->
+    <div class="loading-state is-visible" id="loading-state">
+      <span class="spinner" style="border-color:#c9a84c; border-top-color:transparent;"></span>
+      <span style="color:rgba(255,255,255,0.7);">情報を送信中...</span>
+    </div>
+
+    <!-- サンクスカード（送信完了後に表示） -->
+    <div class="thanks-card hidden" id="thanks-card">
+
+      <!-- アイコン -->
+      <div class="thanks-icon">✓</div>
+
+      <!-- タイトル -->
+      <h1 class="thanks-title">
+        決済ありがとうございます
+      </h1>
+
+      <!-- 顧客名（JavaScript で挿入） -->
+      <p class="thanks-subtitle">
+        <span class="thanks-name" id="customer-name-display"></span>様、<br>
+        この度はAプランにお申し込みいただき<br>
+        ありがとうございます。
+      </p>
+
+      <!-- ポイント付与バッジ -->
+      <div class="thanks-points-badge">
+        ★ 100ポイントを付与しました
+      </div>
+
+      <!-- メッセージ -->
+      <p class="thanks-subtitle" style="font-size:0.9rem;">
+        ご登録内容を確認の上、<strong>24時間以内</strong>にメールにてご連絡いたします。
+      </p>
+
+      <div class="thanks-divider"></div>
+
+      <!-- 今後の流れ -->
+      <div class="thanks-steps">
+        <p class="thanks-steps-title">今後の流れ</p>
+
+        <div class="thanks-step">
+          <span class="thanks-step-num">1</span>
+          <p class="thanks-step-text">
+            <strong>メールをご確認ください</strong><br>
+            登録のメールアドレスへ自動返信メールをお送りしました。
+          </p>
+        </div>
+
+        <div class="thanks-step">
+          <span class="thanks-step-num">2</span>
+          <p class="thanks-step-text">
+            <strong>担当者からご連絡</strong><br>
+            24時間以内に担当者よりメールにてご連絡いたします。
+          </p>
+        </div>
+
+        <div class="thanks-step">
+          <span class="thanks-step-num">3</span>
+          <p class="thanks-step-text">
+            <strong>ヒアリング（Zoom）</strong><br>
+            ご都合の良い日程でZoomにてヒアリングを実施します。
+          </p>
+        </div>
+
+        <div class="thanks-step">
+          <span class="thanks-step-num">4</span>
+          <p class="thanks-step-text">
+            <strong>プロンプト納品</strong><br>
+            ヒアリング内容をもとにプロンプトを作成し、納品いたします。
+          </p>
+        </div>
+      </div>
+
+    </div>
+    <!-- /thanks-card -->
+
+    <!-- エラー時の表示 -->
+    <div class="thanks-card hidden" id="error-card" style="text-align:center;">
+      <div class="thanks-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">!</div>
+      <h2 class="thanks-title" style="font-size:1.4rem;">
+        送信中にエラーが発生しました
+      </h2>
+      <p class="thanks-subtitle">
+        決済は完了しています。<br>
+        お手数ですが、以下のメールアドレスへ<br>
+        お名前と決済完了の旨をご連絡ください。
+      </p>
+      <p style="font-weight:600; color:#1a1a2e; font-size:1rem;">
+        <!-- 管理者メールアドレス（README.mdに従い設定してください） -->
+        your-email@example.com
+      </p>
+    </div>
+
+  </main>
+
+  <!-- ========================================
+       フッター
+       ======================================== -->
+  <footer class="site-footer">
+    <p>&copy; 2025 AIプロンプト作成代行サービス. All Rights Reserved.</p>
+  </footer>
+
+  <!-- ========================================
+       JavaScript
+       ======================================== -->
+  <script>
+    /**
+     * success.html のメインスクリプト
+     *
+     * 処理の流れ:
+     *   1. localStorage から顧客情報を取得
+     *   2. Google Apps Script (GAS) へ POST 送信
+     *   3. GAS 側でスプレッドシートへ記録 & 自動返信メール送信
+     *   4. サンクスカードを表示
+     */
+
+    // ========================================
+    // 設定値（必ず変更してください）
+    // ========================================
+
+    /**
+     * Google Apps Script の Web App URL
+     * GAS をデプロイ後に取得した URL に差し替えてください。
+     * 例: 'https://script.google.com/macros/s/AKfycb.../exec'
+     */
+    const GAS_URL = 'https://script.google.com/macros/s/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/exec';
+
+    // ========================================
+    // ページ読み込み時に実行
+    // ========================================
+    window.addEventListener('load', async function () {
+
+      // DOM 要素を取得
+      const loadingState          = document.getElementById('loading-state');
+      const thanksCard            = document.getElementById('thanks-card');
+      const errorCard             = document.getElementById('error-card');
+      const customerNameDisplay   = document.getElementById('customer-name-display');
+
+      // ----------------------------------------
+      // Step 1: localStorage から顧客情報を取得
+      // ----------------------------------------
+      let customerData = null;
+
+      try {
+        const stored = localStorage.getItem('customerData');
+        if (stored) {
+          customerData = JSON.parse(stored);
+        }
+      } catch (error) {
+        console.warn('localStorage の読み込みに失敗しました:', error);
+      }
+
+      // localStorage にデータがない場合のフォールバック
+      if (!customerData || !customerData.name || !customerData.email) {
+        // データがなくてもサンクス画面は表示する
+        customerData = {
+          name:   'お客様',
+          email:  '',
+          plan:   'Aプラン',
+          points: 100
+        };
+      }
+
+      // ----------------------------------------
+      // Step 2: 顧客名をページに表示
+      // ----------------------------------------
+      customerNameDisplay.textContent = customerData.name;
+
+      // ----------------------------------------
+      // Step 3: GAS へ POST 送信
+      // ----------------------------------------
+      try {
+        const response = await fetch(GAS_URL, {
+          method: 'POST',
+          // GAS の CORS 制限のため no-cors モードを使用
+          // レスポンスは読めないが、送信自体は成功する
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name:   customerData.name,
+            email:  customerData.email,
+            plan:   customerData.plan   || 'Aプラン',
+            points: customerData.points || 100
+          })
+        });
+
+        // no-cors の場合はレスポンスが opaque（中身が読めない）になるため、
+        // エラーが throw されなければ成功とみなす
+
+        // ----------------------------------------
+        // Step 4: localStorage のデータを削除（使用済み）
+        // ----------------------------------------
+        try {
+          localStorage.removeItem('customerData');
+        } catch (e) {
+          // 削除失敗は無視
+        }
+
+        // ----------------------------------------
+        // Step 5: ローディングを非表示、サンクスカードを表示
+        // ----------------------------------------
+        loadingState.classList.remove('is-visible');
+        thanksCard.classList.remove('hidden');
+
+      } catch (error) {
+        // ----------------------------------------
+        // GAS への送信に失敗した場合
+        // ----------------------------------------
+        console.error('GAS への送信に失敗しました:', error);
+
+        // ローディングを非表示、エラーカードを表示
+        loadingState.classList.remove('is-visible');
+        errorCard.classList.remove('hidden');
+      }
+
+    });
+  </script>
+
+</body>
+</html>

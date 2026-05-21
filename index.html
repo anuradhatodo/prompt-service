@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AIプロンプト作成代行サービス。ChatGPT・Claude等のAIを最大限に活用するためのプロンプトをプロが制作します。">
+
+  <title>AIプロンプト作成代行サービス</title>
+
+  <!-- スタイルシート読み込み -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ========================================
+       ヘッダー
+       ======================================== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="header-logo">✦ AIプロンプト制作</span>
+      <span class="header-badge">Professional Prompt Service</span>
+    </div>
+  </header>
+
+  <!-- ========================================
+       ヒーローセクション
+       ======================================== -->
+  <section class="hero">
+    <p class="hero-eyebrow fade-in fade-in-delay-1">AI Prompt Service</p>
+    <h1 class="hero-title fade-in fade-in-delay-2">
+      AIの力を、最大限に。<br>
+      <span>プロンプト制作代行</span>
+    </h1>
+    <p class="hero-subtitle fade-in fade-in-delay-3">
+      ChatGPT・Claude・Gemini などの生成AIを<br>
+      あなたのビジネスに合わせて最大活用するための<br>
+      プロンプトをプロが作成いたします。
+    </p>
+  </section>
+
+  <!-- ========================================
+       特徴セクション
+       ======================================== -->
+  <section class="features-section">
+    <div style="max-width:960px; margin:0 auto;">
+      <p class="hero-eyebrow" style="display:inline-block; color:#c9a84c; border-color:rgba(201,168,76,0.3); background:rgba(201,168,76,0.08);">Features</p>
+      <h2 class="section-title" style="margin-top:0.5rem;">選ばれる3つの理由</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="features-grid">
+
+      <!-- 特徴1 -->
+      <div class="feature-card">
+        <span class="feature-icon">🎯</span>
+        <h3>業務に最適化されたプロンプト</h3>
+        <p>
+          あなたの業界・業務内容をヒアリングし、
+          実際に使える形でプロンプトを設計します。
+          汎用テンプレートとは一線を画す精度をご提供。
+        </p>
+      </div>
+
+      <!-- 特徴2 -->
+      <div class="feature-card">
+        <span class="feature-icon">⚡</span>
+        <h3>最速24時間でご連絡</h3>
+        <p>
+          お申し込み確認後、24時間以内にご連絡します。
+          スピーディーなやり取りで、ビジネスの機会を逃しません。
+          Zoomまたはメールで丁寧にサポートいたします。
+        </p>
+      </div>
+
+      <!-- 特徴3 -->
+      <div class="feature-card">
+        <span class="feature-icon">🔒</span>
+        <h3>安全・安心の決済</h3>
+        <p>
+          決済は世界標準のStripeを採用。
+          クレジットカード情報は当サービスに保存されません。
+          個人情報は厳重に管理いたします。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================
+       プラン & 申し込みセクション
+       ======================================== -->
+  <section class="plan-section">
+    <div style="max-width:960px; margin:0 auto;">
+      <p class="hero-eyebrow" style="display:inline-block; color:#c9a84c; border-color:rgba(201,168,76,0.3); background:rgba(201,168,76,0.08);">Plan</p>
+      <h2 class="section-title" style="margin-top:0.5rem;">料金プラン</h2>
+      <div class="section-divider"></div>
+      <p class="section-desc">
+        まずは Aプラン でお試しください。ご要望に応じて柔軟に対応いたします。
+      </p>
+    </div>
+
+    <div class="plan-wrapper">
+
+      <!-- プランカード -->
+      <div class="plan-card">
+        <span class="plan-badge">Most Popular</span>
+        <h3 class="plan-name">プロンプト制作 Aプラン</h3>
+
+        <!-- 価格表示 -->
+        <div class="plan-price">
+          <span class="plan-price-amount">100,000</span>
+          <span class="plan-price-unit">円</span>
+          <span class="plan-price-tax">（税込）</span>
+        </div>
+
+        <!-- ポイント付与バッジ -->
+        <div class="plan-points">
+          <span>★</span>
+          <span>100ポイント付与</span>
+        </div>
+
+        <!-- 特典一覧 -->
+        <ul class="plan-features">
+          <li>業務用プロンプト 最大5種類作成</li>
+          <li>オンラインヒアリング（Zoom 約60分）</li>
+          <li>修正対応 2回まで無料</li>
+          <li>マニュアル・使い方ガイド付き</li>
+          <li>ChatGPT / Claude / Gemini 対応</li>
+        </ul>
+
+        <!-- ========================================
+             申し込みフォーム
+             （入力内容を localStorage に保存 → Stripe へ遷移）
+             ======================================== -->
+        <div class="form-section">
+          <p class="form-section-title">📋 お申し込み情報の入力</p>
+
+          <form id="apply-form" novalidate>
+
+            <!-- 氏名入力 -->
+            <div class="form-group">
+              <label class="form-label" for="customer-name">
+                お名前
+                <span class="required">※必須</span>
+              </label>
+              <input
+                type="text"
+                id="customer-name"
+                name="name"
+                class="form-input"
+                placeholder="山田 太郎"
+                autocomplete="name"
+                required
+              >
+              <!-- エラーメッセージ表示エリア -->
+              <p class="error-message" id="name-error" role="alert"></p>
+            </div>
+
+            <!-- メールアドレス入力 -->
+            <div class="form-group">
+              <label class="form-label" for="customer-email">
+                メールアドレス
+                <span class="required">※必須</span>
+              </label>
+              <input
+                type="email"
+                id="customer-email"
+                name="email"
+                class="form-input"
+                placeholder="example@email.com"
+                autocomplete="email"
+                required
+              >
+              <!-- エラーメッセージ表示エリア -->
+              <p class="error-message" id="email-error" role="alert"></p>
+              <p class="form-note">
+                ※ 決済完了後、このメールアドレス宛に確認メールをお送りします。
+              </p>
+            </div>
+
+            <!-- 申し込みボタン -->
+            <button
+              type="submit"
+              id="submit-btn"
+              class="btn-primary"
+            >
+              Aプランを申し込む（100,000円）
+              <span class="btn-arrow">→</span>
+            </button>
+
+            <p class="form-note text-center mt-sm">
+              ボタンを押すと Stripe の決済ページへ移動します。<br>
+              個人情報はSSL暗号化通信で安全に送信されます。
+            </p>
+
+          </form>
+        </div>
+        <!-- /form-section -->
+
+      </div>
+      <!-- /plan-card -->
+
+    </div>
+    <!-- /plan-wrapper -->
+  </section>
+
+  <!-- ========================================
+       信頼バッジセクション
+       ======================================== -->
+  <section class="trust-section">
+    <div class="trust-inner">
+      <span class="trust-item">
+        <span class="trust-item-icon">🔐</span>
+        Stripe 決済（SSL暗号化）
+      </span>
+      <span class="trust-item" style="color:#c9a84c;">｜</span>
+      <span class="trust-item">
+        <span class="trust-item-icon">📧</span>
+        24時間以内にご連絡
+      </span>
+      <span class="trust-item" style="color:#c9a84c;">｜</span>
+      <span class="trust-item">
+        <span class="trust-item-icon">🎁</span>
+        100ポイント即時付与
+      </span>
+      <span class="trust-item" style="color:#c9a84c;">｜</span>
+      <span class="trust-item">
+        <span class="trust-item-icon">💬</span>
+        Zoomサポート対応
+      </span>
+    </div>
+  </section>
+
+  <!-- ========================================
+       フッター
+       ======================================== -->
+  <footer class="site-footer">
+    <p>&copy; 2025 AIプロンプト作成代行サービス. All Rights Reserved.</p>
+  </footer>
+
+  <!-- JavaScript 読み込み -->
+  <script src="script.js"></script>
+
+</body>
+</html>
