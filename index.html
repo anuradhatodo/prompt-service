@@ -3,243 +3,730 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="AIプロンプト作成代行サービス。ChatGPT・Claude等のAIを最大限に活用するためのプロンプトをプロが制作します。">
-
-  <title>AIプロンプト作成代行サービス</title>
-
-  <!-- スタイルシート読み込み -->
+  <meta name="description" content="AIに何を聞けばよいか分からない方へ。あなたの目的を整理し、ChatGPT・Claude・GeminiからAIから使える答えを引き出す「完成質問文」を作ります。">
+  <title>AI質問設計 | 完璧な質問を、あなたの代わりに。</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ========================================
+       追加スタイル（index.html専用）
+       ======================================== */
+
+    /* --- Before/After セクション --- */
+    .ba-section {
+      background: var(--color-bg);
+      padding: var(--space-xl) var(--space-lg);
+      border-top: 1px solid var(--color-border-light);
+    }
+    .ba-grid {
+      max-width: 960px;
+      margin: var(--space-lg) auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .ba-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .ba-card-header {
+      background: var(--color-accent);
+      padding: 0.6rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .ba-card-num {
+      font-size: 0.7rem;
+      color: var(--color-gold);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+    .ba-card-title {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.8);
+      font-weight: 400;
+    }
+    .ba-score {
+      margin-left: auto;
+      font-size: 0.72rem;
+      color: var(--color-gold);
+      font-weight: 600;
+    }
+    .ba-body {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      align-items: stretch;
+    }
+    .ba-before, .ba-after {
+      padding: 1rem 1.2rem;
+    }
+    .ba-before {
+      background: #f8f7f5;
+      border-right: 1px solid var(--color-border);
+    }
+    .ba-after {
+      background: var(--color-surface);
+    }
+    .ba-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .ba-label-before { color: var(--color-text-muted); }
+    .ba-label-after  { color: var(--color-gold); }
+    .ba-text {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: var(--color-text-primary);
+      margin: 0;
+    }
+    .ba-text-before {
+      color: var(--color-text-secondary);
+      font-style: italic;
+    }
+    .ba-arrow-col {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: var(--color-gold);
+      background: #fdf9f0;
+      border-right: 1px solid var(--color-border);
+    }
+
+    /* --- 料金プランセクション --- */
+    .pricing-section {
+      background: var(--color-surface);
+      padding: var(--space-xl) var(--space-lg);
+      border-top: 1px solid var(--color-border);
+    }
+    .pricing-grid {
+      max-width: 960px;
+      margin: var(--space-lg) auto 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-sm);
+    }
+    .price-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      text-align: center;
+      transition: transform var(--transition-base), box-shadow var(--transition-base);
+    }
+    .price-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    .price-card.featured {
+      border-color: var(--color-gold);
+      background: var(--color-accent);
+      color: white;
+    }
+    .price-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      padding: 0.25rem 0.8rem;
+      border-radius: 100px;
+      margin-bottom: 0.8rem;
+    }
+    .price-tag-free    { background: #e8f5e9; color: #2d6a4f; }
+    .price-tag-starter { background: #eeedfe; color: #534ab7; }
+    .price-tag-std     { background: #eeedfe; color: #534ab7; }
+    .price-tag-pro     { background: #faece7; color: #712b13; }
+    .price-tag-marunage{ background: var(--color-gold); color: var(--color-accent); }
+    .price-amount {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 0.2rem;
+    }
+    .price-amount.featured { color: var(--color-gold); }
+    .price-cr {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-sm);
+    }
+    .price-cr.featured { color: rgba(255,255,255,0.6); }
+    .price-features {
+      list-style: none;
+      text-align: left;
+      font-size: 0.82rem;
+      line-height: 2;
+      color: var(--color-text-secondary);
+    }
+    .price-features.featured { color: rgba(255,255,255,0.75); }
+    .price-features li::before {
+      content: '✦ ';
+      color: var(--color-gold);
+      font-size: 0.6rem;
+    }
+
+    /* --- クレジット消費表 --- */
+    .credit-table {
+      max-width: 960px;
+      margin: var(--space-md) auto 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .credit-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr;
+      border-bottom: 1px solid var(--color-border-light);
+    }
+    .credit-row:last-child { border-bottom: none; }
+    .credit-row.header {
+      background: var(--color-accent);
+    }
+    .credit-cell {
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+    }
+    .credit-row.header .credit-cell {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+    .credit-num {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-gold);
+    }
+    .credit-name {
+      font-weight: 600;
+      color: var(--color-text-primary);
+      font-size: 0.88rem;
+    }
+
+    /* --- ターゲットセクション --- */
+    .target-section {
+      background: var(--color-accent);
+      padding: var(--space-xl) var(--space-lg);
+    }
+    .target-grid {
+      max-width: 960px;
+      margin: var(--space-lg) auto 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-sm);
+    }
+    .target-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+    }
+    .target-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .target-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-gold);
+      margin-bottom: 0.4rem;
+    }
+    .target-desc {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+    }
+
+    /* --- 申し込みフォームセクション --- */
+    .apply-section {
+      background: var(--color-bg);
+      padding: var(--space-xl) var(--space-lg);
+      border-top: 1px solid var(--color-border-light);
+    }
+    .apply-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .plan-select-group {
+      margin-bottom: var(--space-md);
+    }
+    .plan-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .plan-option {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 1rem;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+    }
+    .plan-option input[type="radio"] {
+      accent-color: var(--color-gold);
+    }
+    .plan-option:has(input:checked) {
+      border-color: var(--color-gold);
+      background: #fdf9f0;
+      color: var(--color-text-primary);
+    }
+    .free-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      background: #e8f5e9;
+      color: #2d6a4f;
+      border-radius: 4px;
+      margin-left: 0.3rem;
+    }
+
+    /* レスポンシブ */
+    @media (max-width: 600px) {
+      .ba-body {
+        grid-template-columns: 1fr;
+      }
+      .ba-arrow-col {
+        padding: 0.4rem;
+        transform: rotate(90deg);
+        border-right: none;
+        border-top: 1px solid var(--color-border);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .plan-options {
+        grid-template-columns: 1fr;
+      }
+      .credit-row {
+        grid-template-columns: 60px 1fr;
+      }
+      .credit-row .credit-cell:last-child {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- ========================================
-       ヘッダー
-       ======================================== -->
+  <!-- ヘッダー -->
   <header class="site-header">
     <div class="header-inner">
-      <span class="header-logo">✦ AIプロンプト制作</span>
-      <span class="header-badge">Professional Prompt Service</span>
+      <span class="header-logo">✦ AI質問設計</span>
+      <span class="header-badge">完璧な質問を、あなたの代わりに。</span>
     </div>
   </header>
 
   <!-- ========================================
-       ヒーローセクション
+       ヒーロー
        ======================================== -->
   <section class="hero">
-    <p class="hero-eyebrow fade-in fade-in-delay-1">AI Prompt Service</p>
+    <p class="hero-eyebrow fade-in fade-in-delay-1">AI Question Design Service</p>
     <h1 class="hero-title fade-in fade-in-delay-2">
-      AIの力を、最大限に。<br>
-      <span>プロンプト制作代行</span>
+      AIに何を聞けばいいか、<br>
+      <span>分からなくていい。</span>
     </h1>
     <p class="hero-subtitle fade-in fade-in-delay-3">
-      ChatGPT・Claude・Gemini などの生成AIを<br>
-      あなたのビジネスに合わせて最大活用するための<br>
-      プロンプトをプロが作成いたします。
+      ChatGPT・Claude・Gemini は優秀です。<br>
+      でも、質問が曖昧だと答えも曖昧になります。<br>
+      あなたの目的を整理し、AIから使える答えを<br>
+      引き出す「完成質問文」を作ります。
+    </p>
+    <p style="color:rgba(255,255,255,0.5); font-size:0.8rem; margin-top: -0.5rem;" class="fade-in fade-in-delay-3">
+      まずは無料3クレジットでお試しください
     </p>
   </section>
 
   <!-- ========================================
-       特徴セクション
+       こんな方へ（ターゲット）
        ======================================== -->
-  <section class="features-section">
+  <section class="target-section">
     <div style="max-width:960px; margin:0 auto;">
-      <p class="hero-eyebrow" style="display:inline-block; color:#c9a84c; border-color:rgba(201,168,76,0.3); background:rgba(201,168,76,0.08);">Features</p>
-      <h2 class="section-title" style="margin-top:0.5rem;">選ばれる3つの理由</h2>
+      <p class="hero-eyebrow" style="display:inline-block; color:var(--color-gold); border-color:rgba(201,168,76,0.4);">For You</p>
+      <h2 class="section-title" style="color:white; margin-top:0.5rem;">こんな方に使われています</h2>
       <div class="section-divider"></div>
     </div>
+    <div class="target-grid">
+      <div class="target-card">
+        <span class="target-icon">🏪</span>
+        <p class="target-title">個人事業主・小規模経営者</p>
+        <p class="target-desc">補助金申請文・SNS投稿・採用文・業務改善など、何をどう聞けばよいか分からない</p>
+      </div>
+      <div class="target-card">
+        <span class="target-icon">⚖️</span>
+        <p class="target-title">士業・専門職</p>
+        <p class="target-desc">法律・税務・医療周辺の専門業務でAI回答の精度を上げたい</p>
+      </div>
+      <div class="target-card">
+        <span class="target-icon">✍️</span>
+        <p class="target-title">クリエイター・講師</p>
+        <p class="target-desc">企画・台本・商品説明・セミナー資料をAIで効率化したいが使いこなせていない</p>
+      </div>
+      <div class="target-card">
+        <span class="target-icon">💼</span>
+        <p class="target-title">会社員・副業者</p>
+        <p class="target-desc">レポート・調査・メール・資料作成でAIを使いたいが思った答えが返ってこない</p>
+      </div>
+    </div>
+  </section>
 
-    <div class="features-grid">
+  <!-- ========================================
+       Before / After
+       ======================================== -->
+  <section class="ba-section">
+    <div style="max-width:960px; margin:0 auto;">
+      <p class="hero-eyebrow" style="display:inline-block; color:var(--color-gold); border-color:rgba(201,168,76,0.3); background:rgba(201,168,76,0.08);">Before / After</p>
+      <h2 class="section-title" style="margin-top:0.5rem;">質問が変わると、答えが変わる</h2>
+      <div class="section-divider"></div>
+      <p class="section-desc">同じAIに同じテーマを聞いても、質問の設計次第で出力の品質は大きく変わります。</p>
+    </div>
 
-      <!-- 特徴1 -->
-      <div class="feature-card">
-        <span class="feature-icon">🎯</span>
-        <h3>業務に最適化されたプロンプト</h3>
-        <p>
-          あなたの業界・業務内容をヒアリングし、
-          実際に使える形でプロンプトを設計します。
-          汎用テンプレートとは一線を画す精度をご提供。
-        </p>
+    <div class="ba-grid">
+
+      <!-- Case 01 -->
+      <div class="ba-card">
+        <div class="ba-card-header">
+          <span class="ba-card-num">CASE 01</span>
+          <span class="ba-card-title">SNS投稿作成 ／ 美容サロン</span>
+          <span class="ba-score">スコア 9 → 32点</span>
+        </div>
+        <div class="ba-body">
+          <div class="ba-before">
+            <p class="ba-label ba-label-before">Before</p>
+            <p class="ba-text ba-text-before">「インスタ投稿を考えて」</p>
+          </div>
+          <div class="ba-arrow-col">→</div>
+          <div class="ba-after">
+            <p class="ba-label ba-label-after">After（設計済みプロンプト）</p>
+            <p class="ba-text">あなたは美容サロンのSNSマーケターです。30代女性向けの小規模ヘアサロンが、初回予約につながるInstagram投稿を10本作成してください。トーンは親しみやすく・押し売り感なし・各投稿にCTAあり・120文字以内・ハッシュタグ5個以内。<strong>出力は表形式で。</strong></p>
+          </div>
+        </div>
       </div>
 
-      <!-- 特徴2 -->
-      <div class="feature-card">
-        <span class="feature-icon">⚡</span>
-        <h3>最速24時間でご連絡</h3>
-        <p>
-          お申し込み確認後、24時間以内にご連絡します。
-          スピーディーなやり取りで、ビジネスの機会を逃しません。
-          Zoomまたはメールで丁寧にサポートいたします。
-        </p>
+      <!-- Case 02 -->
+      <div class="ba-card">
+        <div class="ba-card-header">
+          <span class="ba-card-num">CASE 02</span>
+          <span class="ba-card-title">営業メール ／ コンサル・士業</span>
+          <span class="ba-score">スコア 8 → 31点</span>
+        </div>
+        <div class="ba-body">
+          <div class="ba-before">
+            <p class="ba-label ba-label-before">Before</p>
+            <p class="ba-text ba-text-before">「営業メールを作って」</p>
+          </div>
+          <div class="ba-arrow-col">→</div>
+          <div class="ba-after">
+            <p class="ba-label ba-label-after">After（設計済みプロンプト）</p>
+            <p class="ba-text">中小企業の経営者（製造業・10〜50名）向けの経営コンサル初回営業メール。件名案3つ＋本文400字以内。アポ獲得が目的。押し売り感なし・対等なトーン・末尾に「15分だけ」形式のCTA。<strong>件名と本文をセットで出力。</strong></p>
+          </div>
+        </div>
       </div>
 
-      <!-- 特徴3 -->
-      <div class="feature-card">
-        <span class="feature-icon">🔒</span>
-        <h3>安全・安心の決済</h3>
-        <p>
-          決済は世界標準のStripeを採用。
-          クレジットカード情報は当サービスに保存されません。
-          個人情報は厳重に管理いたします。
-        </p>
+      <!-- Case 03 -->
+      <div class="ba-card">
+        <div class="ba-card-header">
+          <span class="ba-card-num">CASE 03</span>
+          <span class="ba-card-title">競合調査 ／ 経営者・副業者</span>
+          <span class="ba-score">スコア 7 → 30点</span>
+        </div>
+        <div class="ba-body">
+          <div class="ba-before">
+            <p class="ba-label ba-label-before">Before</p>
+            <p class="ba-text ba-text-before">「競合を調べて」</p>
+          </div>
+          <div class="ba-arrow-col">→</div>
+          <div class="ba-after">
+            <p class="ba-label ba-label-after">After（設計済みプロンプト）</p>
+            <p class="ba-text">日本国内のAIプロンプト代行サービスの競合調査。目的は新規参入時の差別化ポイント発見。個人事業主向けに絞り、主要5件を表形式・価格帯・弱点・差別化案3つ以上。<strong>事実と推測を分けて記載。</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case 04 -->
+      <div class="ba-card">
+        <div class="ba-card-header">
+          <span class="ba-card-num">CASE 04</span>
+          <span class="ba-card-title">セミナー企画書 ／ 講師・コンサル</span>
+          <span class="ba-score">スコア 6 → 31点</span>
+        </div>
+        <div class="ba-body">
+          <div class="ba-before">
+            <p class="ba-label ba-label-before">Before</p>
+            <p class="ba-text ba-text-before">「セミナーの企画書を作って」</p>
+          </div>
+          <div class="ba-arrow-col">→</div>
+          <div class="ba-after">
+            <p class="ba-label ba-label-after">After（設計済みプロンプト）</p>
+            <p class="ba-text">中小企業向けChatGPT活用入門・オンライン90分・15,000円のセミナー企画書。タイトル案3つ・開催背景・参加者が得られること3点・カリキュラム・参加費根拠を含む。<strong>協賛提案・LP素材として使う前提で。</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case 05 -->
+      <div class="ba-card">
+        <div class="ba-card-header">
+          <span class="ba-card-num">CASE 05</span>
+          <span class="ba-card-title">商品説明文 ／ EC・小規模ショップ</span>
+          <span class="ba-score">スコア 8 → 33点</span>
+        </div>
+        <div class="ba-body">
+          <div class="ba-before">
+            <p class="ba-label ba-label-before">Before</p>
+            <p class="ba-text ba-text-before">「商品説明を書いて」</p>
+          </div>
+          <div class="ba-arrow-col">→</div>
+          <div class="ba-after">
+            <p class="ba-label ba-label-after">After（設計済みプロンプト）</p>
+            <p class="ba-text">手作りレザーウォレット（栃木レザー・職人手縫い・18,000円）のEC説明文。30〜50代男性・本物志向向け。200〜250字・最初の一文で「なぜこの財布か」を伝える・安売り表現禁止・経年変化の体験をイメージさせる。<strong>説明文本文のみ出力。</strong></p>
+          </div>
+        </div>
       </div>
 
     </div>
   </section>
 
   <!-- ========================================
-       プラン & 申し込みセクション
+       料金プラン
        ======================================== -->
-  <section class="plan-section">
+  <section class="pricing-section">
     <div style="max-width:960px; margin:0 auto;">
-      <p class="hero-eyebrow" style="display:inline-block; color:#c9a84c; border-color:rgba(201,168,76,0.3); background:rgba(201,168,76,0.08);">Plan</p>
-      <h2 class="section-title" style="margin-top:0.5rem;">料金プラン</h2>
+      <p class="hero-eyebrow" style="display:inline-block; color:var(--color-gold); border-color:rgba(201,168,76,0.3); background:rgba(201,168,76,0.08);">Pricing</p>
+      <h2 class="section-title" style="margin-top:0.5rem;">料金プラン（クレジット制）</h2>
       <div class="section-divider"></div>
-      <p class="section-desc">
-        まずは Aプラン でお試しください。ご要望に応じて柔軟に対応いたします。
-      </p>
+      <p class="section-desc">まずは無料クレジットでBefore/Afterを体験してください。</p>
     </div>
 
-    <div class="plan-wrapper">
+    <div class="pricing-grid">
 
-      <!-- プランカード -->
-      <div class="plan-card">
-        <span class="plan-badge">Most Popular</span>
-        <h3 class="plan-name">プロンプト制作 Aプラン</h3>
-
-        <!-- 価格表示 -->
-        <div class="plan-price">
-          <span class="plan-price-amount">100,000</span>
-          <span class="plan-price-unit">円</span>
-          <span class="plan-price-tax">（税込）</span>
-        </div>
-
-        <!-- ポイント付与バッジ -->
-        <div class="plan-points">
-          <span>★</span>
-          <span>100ポイント付与</span>
-        </div>
-
-        <!-- 特典一覧 -->
-        <ul class="plan-features">
-          <li>業務用プロンプト 最大5種類作成</li>
-          <li>オンラインヒアリング（Zoom 約60分）</li>
-          <li>修正対応 2回まで無料</li>
-          <li>マニュアル・使い方ガイド付き</li>
-          <li>ChatGPT / Claude / Gemini 対応</li>
+      <div class="price-card">
+        <span class="price-tag price-tag-free">無料体験</span>
+        <p class="price-amount">0円</p>
+        <p class="price-cr">3クレジット付与</p>
+        <ul class="price-features">
+          <li>質問改善 1回</li>
+          <li>Before/After確認</li>
+          <li>改善理由つき</li>
         </ul>
+      </div>
 
-        <!-- ========================================
-             申し込みフォーム
-             （入力内容を localStorage に保存 → Stripe へ遷移）
-             ======================================== -->
+      <div class="price-card">
+        <span class="price-tag price-tag-starter">Starter</span>
+        <p class="price-amount">1,000円</p>
+        <p class="price-cr">5クレジット</p>
+        <ul class="price-features">
+          <li>質問リライト × 5回</li>
+          <li>改善理由つき</li>
+          <li>有効期限なし</li>
+        </ul>
+      </div>
+
+      <div class="price-card featured">
+        <span class="price-tag price-tag-marunage">Standard</span>
+        <p class="price-amount featured">3,000円</p>
+        <p class="price-cr featured">20クレジット</p>
+        <ul class="price-features featured">
+          <li>質問設計 × 6回以上</li>
+          <li>目的整理＋使い方付き</li>
+          <li>複数AI対応も可</li>
+        </ul>
+      </div>
+
+      <div class="price-card">
+        <span class="price-tag price-tag-pro">Pro</span>
+        <p class="price-amount">9,800円</p>
+        <p class="price-cr">80クレジット</p>
+        <ul class="price-features">
+          <li>大量依頼・業務改善向け</li>
+          <li>成果物生成支援も可</li>
+          <li>追撃質問・チェックリスト付き</li>
+        </ul>
+      </div>
+
+      <div class="price-card">
+        <span class="price-tag price-tag-marunage">丸投げ</span>
+        <p class="price-amount">10,000円〜</p>
+        <p class="price-cr">個別見積</p>
+        <ul class="price-features">
+          <li>ヒアリング〜納品まで代行</li>
+          <li>成果物（文章・企画書等）納品</li>
+          <li>Zoom相談あり</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- クレジット消費表 -->
+    <div style="max-width:960px; margin:var(--space-lg) auto 0;">
+      <p style="font-size:0.85rem; font-weight:600; color:var(--color-text-secondary); margin-bottom:0.8rem;">クレジット消費ルール</p>
+      <div class="credit-table">
+        <div class="credit-row header">
+          <div class="credit-cell">消費CR</div>
+          <div class="credit-cell">メニュー名</div>
+          <div class="credit-cell">納品内容</div>
+        </div>
+        <div class="credit-row">
+          <div class="credit-cell"><span class="credit-num">1</span> CR</div>
+          <div class="credit-cell"><span class="credit-name">質問リライト</span></div>
+          <div class="credit-cell">改善後プロンプト＋一言改善理由</div>
+        </div>
+        <div class="credit-row">
+          <div class="credit-cell"><span class="credit-num">3</span> CR</div>
+          <div class="credit-cell"><span class="credit-name">目的整理つき質問作成</span></div>
+          <div class="credit-cell">完成プロンプト＋使い方＋出力形式指定</div>
+        </div>
+        <div class="credit-row">
+          <div class="credit-cell"><span class="credit-num">5</span> CR</div>
+          <div class="credit-cell"><span class="credit-name">複数AI最適化</span></div>
+          <div class="credit-cell">ChatGPT / Claude / Gemini 用＋比較表</div>
+        </div>
+        <div class="credit-row">
+          <div class="credit-cell"><span class="credit-num">10</span> CR</div>
+          <div class="credit-cell"><span class="credit-name">成果物生成支援</span></div>
+          <div class="credit-cell">AI実行＋出力チェックリスト＋追撃質問</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       申し込みフォーム
+       ======================================== -->
+  <section class="apply-section">
+    <div style="max-width:960px; margin:0 auto; margin-bottom: var(--space-md);">
+      <p class="hero-eyebrow" style="display:inline-block; color:var(--color-gold); border-color:rgba(201,168,76,0.3); background:rgba(201,168,76,0.08);">Apply</p>
+      <h2 class="section-title" style="margin-top:0.5rem;">お申し込み</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="apply-wrapper">
+      <div class="plan-card">
+
+        <!-- プラン選択 -->
         <div class="form-section">
-          <p class="form-section-title">📋 お申し込み情報の入力</p>
+          <p class="form-section-title">📋 プランとお申し込み情報</p>
 
           <form id="apply-form" novalidate>
 
-            <!-- 氏名入力 -->
+            <!-- プラン選択 -->
+            <div class="form-group plan-select-group">
+              <label class="form-label">プランを選択してください<span class="required">※必須</span></label>
+              <div class="plan-options">
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="無料体験（3CR）" checked>
+                  無料体験（3CR）<span class="free-badge">FREE</span>
+                </label>
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Starter（5CR・1,000円）">
+                  Starter — 1,000円
+                </label>
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Standard（20CR・3,000円）">
+                  Standard — 3,000円
+                </label>
+                <label class="plan-option">
+                  <input type="radio" name="plan" value="Pro（80CR・9,800円）">
+                  Pro — 9,800円
+                </label>
+              </div>
+            </div>
+
+            <!-- 氏名 -->
             <div class="form-group">
               <label class="form-label" for="customer-name">
-                お名前
-                <span class="required">※必須</span>
+                お名前<span class="required">※必須</span>
               </label>
-              <input
-                type="text"
-                id="customer-name"
-                name="name"
-                class="form-input"
-                placeholder="山田 太郎"
-                autocomplete="name"
-                required
-              >
-              <!-- エラーメッセージ表示エリア -->
+              <input type="text" id="customer-name" name="name" class="form-input"
+                placeholder="山田 太郎" autocomplete="name" required>
               <p class="error-message" id="name-error" role="alert"></p>
             </div>
 
-            <!-- メールアドレス入力 -->
+            <!-- メール -->
             <div class="form-group">
               <label class="form-label" for="customer-email">
-                メールアドレス
-                <span class="required">※必須</span>
+                メールアドレス<span class="required">※必須</span>
               </label>
-              <input
-                type="email"
-                id="customer-email"
-                name="email"
-                class="form-input"
-                placeholder="example@email.com"
-                autocomplete="email"
-                required
-              >
-              <!-- エラーメッセージ表示エリア -->
+              <input type="email" id="customer-email" name="email" class="form-input"
+                placeholder="example@email.com" autocomplete="email" required>
               <p class="error-message" id="email-error" role="alert"></p>
               <p class="form-note">
-                ※ 決済完了後、このメールアドレス宛に確認メールをお送りします。
+                ※ クレジット情報・ご利用案内をこのアドレスへお送りします。
               </p>
             </div>
 
-            <!-- 申し込みボタン -->
-            <button
-              type="submit"
-              id="submit-btn"
-              class="btn-primary"
-            >
-              Aプランを申し込む（100,000円）
+            <!-- 送信ボタン -->
+            <button type="submit" id="submit-btn" class="btn-primary">
+              申し込む（無料体験はそのまま進む）
               <span class="btn-arrow">→</span>
             </button>
 
             <p class="form-note text-center mt-sm">
-              ボタンを押すと Stripe の決済ページへ移動します。<br>
-              個人情報はSSL暗号化通信で安全に送信されます。
+              有料プランは Stripe の決済ページへ移動します。<br>
+              無料体験はお支払いなしで完了します。
             </p>
 
           </form>
         </div>
-        <!-- /form-section -->
 
       </div>
-      <!-- /plan-card -->
-
     </div>
-    <!-- /plan-wrapper -->
   </section>
 
-  <!-- ========================================
-       信頼バッジセクション
-       ======================================== -->
+  <!-- 信頼バッジ -->
   <section class="trust-section">
     <div class="trust-inner">
+      <span class="trust-item">
+        <span class="trust-item-icon">🎁</span>
+        無料3クレジットでお試し
+      </span>
+      <span class="trust-item" style="color:var(--color-gold);">｜</span>
       <span class="trust-item">
         <span class="trust-item-icon">🔐</span>
         Stripe 決済（SSL暗号化）
       </span>
-      <span class="trust-item" style="color:#c9a84c;">｜</span>
+      <span class="trust-item" style="color:var(--color-gold);">｜</span>
       <span class="trust-item">
-        <span class="trust-item-icon">📧</span>
+        <span class="trust-item-icon">⚡</span>
         24時間以内にご連絡
       </span>
-      <span class="trust-item" style="color:#c9a84c;">｜</span>
-      <span class="trust-item">
-        <span class="trust-item-icon">🎁</span>
-        100ポイント即時付与
-      </span>
-      <span class="trust-item" style="color:#c9a84c;">｜</span>
+      <span class="trust-item" style="color:var(--color-gold);">｜</span>
       <span class="trust-item">
         <span class="trust-item-icon">💬</span>
-        Zoomサポート対応
+        Zoom対応
       </span>
     </div>
   </section>
 
-  <!-- ========================================
-       フッター
-       ======================================== -->
+  <!-- フッター -->
   <footer class="site-footer">
-    <p>&copy; 2025 AIプロンプト作成代行サービス. All Rights Reserved.</p>
+    <p>&copy; 2025 AI質問設計. All Rights Reserved.</p>
   </footer>
 
-  <!-- JavaScript 読み込み -->
   <script src="script.js"></script>
+  <script>
+    // プラン選択に応じてボタンテキストを変更
+    document.querySelectorAll('input[name="plan"]').forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        var btn = document.getElementById('submit-btn');
+        if (this.value.includes('無料')) {
+          btn.innerHTML = '無料体験を始める（お支払いなし）<span class="btn-arrow">→</span>';
+        } else {
+          btn.innerHTML = '申し込む（Stripeへ）<span class="btn-arrow">→</span>';
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>
